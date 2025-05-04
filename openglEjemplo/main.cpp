@@ -1,15 +1,20 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <cmath>
 
 // Vertex Shader source code (GLSL 4.10)
 const char* vertexShaderSource = R"(
     #version 410 core
     layout (location = 0) in vec3 aPos;
 
+    out vec3 aColor;
+
     void main()
     {
+        aColor = aPos;
         gl_Position = vec4(aPos, 1.0);
+
     }
 )";
 
@@ -17,12 +22,31 @@ const char* vertexShaderSource = R"(
 const char* fragmentShaderSource = R"(
     #version 410 core
     out vec4 FragColor;
+    in vec3 aColor;
 
     void main()
     {
-        FragColor = vec4(1.0, 0.5, 0.2, 1.0);
+        //FragColor = vec4(1.0, 0.5, 0.2, 1.0);
+        FragColor = vec4(aColor, 1.0);
     }
 )";
+
+float* creaCirculo(int tam,float radius){
+  
+  float *vertices = new float[(tam+1)*3];
+  float dosPI_entre_tam = 2.0f * M_PI / (float)(tam - 1);
+  float radio = 0.5;
+  // float pi = cmath.pi;
+  for (int i = 1; i < tam + 1; i++)
+    {
+
+        vertices[(i * 3) + 0] = radius * cosf(dosPI_entre_tam * (i - 1)); // x
+        vertices[(i * 3) + 1] = radius * sinf(dosPI_entre_tam * (i - 1)); // y
+        vertices[(i * 3) + 2] = 0.0f;                                     // z
+    }
+
+    return vertices;
+}
 
 int main()
 {
@@ -102,12 +126,10 @@ int main()
     glDeleteShader(fragmentShader);
 
     // Set up vertex data and buffers and configure vertex attributes
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
-    };
+    int tam = 100;
 
+    float *vertices = creaCirculo(tam, 0.5);
+    
     GLuint VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -116,7 +138,7 @@ int main()
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,  (tam + 1) * 3 * sizeof(float), vertices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -138,7 +160,13 @@ int main()
         // Draw the triangle
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // Bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        glDrawArrays(GL_TRIANGLE_FAN, 0, tam + 1);
+
+        glDisableVertexAttribArray(0);
 
         // Swap buffers and poll IO events
         glfwSwapBuffers(window);
@@ -149,7 +177,7 @@ int main()
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteProgram(shaderProgram);
-
+    //delete vertices;
     // Terminate GLFW
     glfwTerminate();
     return 0;
