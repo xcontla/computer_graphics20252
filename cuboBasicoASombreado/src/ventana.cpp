@@ -59,8 +59,9 @@ void Ventana::initModels(Model* m)
 }
 void Ventana::initViewProyection(){
      // Configurar matrices de transformación (model, view, projection)
-    view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
-    //view = glm::lookAt(posCamara, pov,  up);
+    //view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
+    posCamara = glm::vec3(0.0f, 0.0f, -3.0f);
+    view = glm::lookAt(posCamara, glm::vec3(0.0f), glm::vec3(0.0f,1.0f,0.0f));
     projection = glm::perspective(
         glm::radians(45.0f), // FOV 
         (float)width / (float)height, // aspect ratio
@@ -77,7 +78,7 @@ while (!glfwWindowShouldClose(window)) {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        model->renderModel(view, projection);
+        model->renderModel(view, projection, posCamara);
 
 
         glfwSwapBuffers(window);

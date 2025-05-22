@@ -1,17 +1,18 @@
 #include "../header/model.h"
+#include <iostream>
 
 
     Model::Model()
     {
-
-        vertices[0] = -0.5f; vertices[1]  = -0.5f; vertices[2]  = -0.5f; vertices[3]  = 1.0f; vertices[4]  = 0.0f; vertices[5]  = 0.0f; // v0     
-        vertices[6]  = 0.5f; vertices[7]  = -0.5f; vertices[8]  = -0.5f; vertices[9]  = 0.0f; vertices[10] = 1.0f; vertices[11] = 0.0f; // v1
-        vertices[12] = 0.5f; vertices[13] =  0.5f; vertices[14] = -0.5f; vertices[15] = 0.0f; vertices[16] = 0.0f; vertices[17] = 1.0f; // v2
-        vertices[18] =-0.5f; vertices[19] =  0.5f; vertices[20] = -0.5f; vertices[21] = 1.0f; vertices[22] = 1.0f; vertices[23] = 0.0f; // v3
-        vertices[24] =-0.5f; vertices[25] = -0.5f; vertices[26] =  0.5f; vertices[27] =  0.0f; vertices[28] = 1.0f; vertices[29] = 1.0f; // v4
-        vertices[30] = 0.5f; vertices[31] = -0.5f; vertices[32] =  0.5f; vertices[33] =  1.0f; vertices[34] = 0.0f; vertices[35] = 1.0f; // v5
-        vertices[36] = 0.5f; vertices[37] =  0.5f; vertices[38] =  0.5f; vertices[39] =  0.5f; vertices[40] = 0.5f; vertices[41] = 0.5f; // v6
-        vertices[42] =-0.5f; vertices[43] =  0.5f; vertices[44] =  0.5f; vertices[45] =  1.0f; vertices[46] = 0.5f; vertices[47] = 0.0f; // v7
+        //(x,y,z,nx,ny,nz)
+        vertices[0] = -0.5f; vertices[1]  = -0.5f; vertices[2]  = -0.5f; vertices[3]  = -1.0f; vertices[4]  = -1.0f; vertices[5]  = -1.0f; // v0     
+        vertices[6]  = 0.5f; vertices[7]  = -0.5f; vertices[8]  = -0.5f; vertices[9]  =  1.0f; vertices[10] = -1.0f; vertices[11] = -1.0f; // v1
+        vertices[12] = 0.5f; vertices[13] =  0.5f; vertices[14] = -0.5f; vertices[15] =  1.0f; vertices[16] =  1.0f; vertices[17] = -1.0f; // v2
+        vertices[18] =-0.5f; vertices[19] =  0.5f; vertices[20] = -0.5f; vertices[21] = -1.0f; vertices[22] =  1.0f; vertices[23] = -1.0f; // v3
+        vertices[24] =-0.5f; vertices[25] = -0.5f; vertices[26] =  0.5f; vertices[27] = -1.0f; vertices[28] = -1.0f; vertices[29] = 1.0f; // v4
+        vertices[30] = 0.5f; vertices[31] = -0.5f; vertices[32] =  0.5f; vertices[33] =  1.0f; vertices[34] = -1.0f; vertices[35] = 1.0f; // v5
+        vertices[36] = 0.5f; vertices[37] =  0.5f; vertices[38] =  0.5f; vertices[39] =  1.0f; vertices[40] =  1.0f; vertices[41] = 1.0f; // v6
+        vertices[42] =-0.5f; vertices[43] =  0.5f; vertices[44] =  0.5f; vertices[45] = -1.0f; vertices[46] =  1.0f; vertices[47] = 1.0f; // v7
 
         indices[0] = 0;indices[1] = 2;indices[2] = 1;indices[3] = 3;indices[4] = 2;indices[5] = 0; // Cara trasera
         indices[6] = 4;indices[7] = 5;indices[8] = 6;indices[9] = 6;indices[10] = 7;indices[11] = 4; // Cara delantera
@@ -74,6 +75,24 @@
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
     }
+
+        void Model::renderModel(glm::mat4 view, glm::mat4 projection, glm::vec3 posCamara){
+        
+        shader->use();
+
+        // Enviar las matrices al shader
+        shader->setMat4x4("model", modelmat);
+        shader->setMat4x4("view", view);
+        shader->setMat4x4("projection", projection);
+        shader->setVec3("posCam", posCamara);
+
+        
+        // Dibujar el cubo
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+    }
+
     void Model::finish(){
 
         

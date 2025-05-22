@@ -11,6 +11,7 @@ class Ventana{
         GLuint width, height;
         GLFWwindow* window;
         glm::mat4 view, projection;
+        glm::vec3 posCamara;
 
         Model *model;
 

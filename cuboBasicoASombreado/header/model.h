@@ -23,6 +23,7 @@ public:
     
     void initModel(std::string vert, std::string frag);
     void renderModel(glm::mat4 view, glm::mat4 projection);
+    void renderModel(glm::mat4 view, glm::mat4 projection, glm::vec3 posCamara);
     void updateModel(float timeValue);
     void finish();
 
