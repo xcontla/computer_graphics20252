@@ -14,7 +14,7 @@ float coef_especular = 0.9;
 
 vec3 matColor = vec3(1.0,0.0,1.0);
 vec3 posLuz = vec3(-5.0);
-vec3 colorLuz = vec3(1.0);
+vec3 colorLuz = vec3(1.0,1.0,1.0);
 
 float glossines = 10.0;
 
