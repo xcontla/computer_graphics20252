@@ -8,12 +8,12 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform vec3 posCam;
 
-float coef_ambiental = 0.1;
-float coef_difusa = 0.8;
+vec3 coef_ambiental = vec3(0.1,0.1,0.2);
+float coef_difusa = 0.7;
 float coef_especular = 0.9;
 
 vec3 matColor = vec3(1.0,0.0,1.0);
-vec3 posLuz = vec3(-5.0);
+vec3 posLuz = vec3(-5.0, -5.0, -5.0);
 vec3 colorLuz = vec3(1.0,1.0,1.0);
 
 float glossines = 10.0;
