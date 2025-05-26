@@ -4,7 +4,6 @@
     Model::Model()
     {
 
-        //(x,y,z, r, g, b)
         vertices[0] = -0.5f; vertices[1]  = -0.5f; vertices[2]  = -0.5f; vertices[3]  = 1.0f; vertices[4]  = 0.0f; vertices[5]  = 0.0f;  // v0     
         vertices[6]  = 0.5f; vertices[7]  = -0.5f; vertices[8]  = -0.5f; vertices[9]  = 0.0f; vertices[10] = 1.0f; vertices[11] = 0.0f; // v1
         vertices[12] = 0.5f; vertices[13] =  0.5f; vertices[14] = -0.5f; vertices[15] = 0.0f; vertices[16] = 0.0f; vertices[17] = 1.0f; // v2
@@ -21,14 +20,14 @@
         indices[24] =0;indices[25] = 7;indices[26] = 3;indices[27] = 7;indices[28] = 0;indices[29] = 4; // Cara izquierda
         indices[30] =1;indices[31] = 2;indices[32] = 6;indices[33] = 6;indices[34] = 5;indices[35] = 1; // Cara derecha
 
-        uv[0] = 0.0f; uv[1] = 0.0f; //uv V0
-        uv[2] = 1.0f; uv[3] = 0.0f; //uv V1
-        uv[4] = 1.0f; uv[5] = 1.0f; //uv V2
-        uv[6] = 0.0f; uv[7] = 1.0f; //uv V3
-        uv[8] = 1.0f; uv[9] = 1.0f; //uv V4
-        uv[10] = 0.0f; uv[11] = 1.0f; //uv V5
-        uv[12] = 0.0f; uv[13] = 0.0f; // uv V6
-        uv[14] = 1.0f; uv[15] = 0.0f; // uv V7
+        uv[0] = 0.0f; uv[1] = 0.0f; 
+        uv[2] = 1.0f; uv[3] = 0.0f; 
+        uv[4] = 1.0f; uv[5] = 1.0f; 
+        uv[6] = 0.0f; uv[7] = 1.0f; 
+        uv[8] = 0.0f; uv[9] = 0.0f; 
+        uv[10] = 1.0f; uv[11] = 0.0f; 
+        uv[12] = 1.0f; uv[13] = 1.0f; 
+        uv[14] = 0.0f; uv[15] = 1.0f; 
     
     }
 
@@ -39,9 +38,10 @@
     {
 
     modelmat = glm::mat4(1.0f);
-    shader = new Shader("./shader/cubo.vert","./shader/cubo.frag");
+    shader = new Shader("./shader/cubo.vert","./shader/cuboImagen.frag");
          // Crear y enlazar el VAO y VBO
-    
+    textura = new Textura("./img/caja.jpg");
+
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &UVBO);
@@ -73,8 +73,8 @@
     }
 
     void Model::updateModel(float timeValue){
-        angle = 0.0; // 50 grados por segundo
-        //angle = timeValue * glm::radians(1.0f); // 50 grados por segundo
+        angle = timeValue * glm::radians(10.0f); // 50 grados por segundo
+
         modelmat = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.5f, 1.0f, 0.0f)); // Rotar alrededor de (0.5, 1.0, 0.0)
     }
 
@@ -87,6 +87,8 @@
         shader->setMat4x4("view", view);
         shader->setMat4x4("projection", projection);
         
+        //Activar textura
+        textura->activar(GL_TEXTURE0,shader->ID);
         // Dibujar el cubo
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -97,7 +99,7 @@
         
         shader->terminate();
         delete(shader);
-    
+        delete(textura);
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
         glDeleteBuffers(1, &UVBO);
